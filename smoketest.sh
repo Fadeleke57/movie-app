@@ -54,6 +54,15 @@ echo "Testing /top-rated-movies endpoint..."
 response=$(curl -s -X GET "$BASE_URL/search/top-rated-movies")
 echo "Response: $response"
 
+#Test Add To Watchlist
+echo "Testing /add-to-watchlist endpoint..."
+response=$(curl -s -X POST "$BASE_URL/watchlist/add-to-watchlist" -H "Content-Type: application/json" -d '{
+  "username": "testuser123",
+  "imdb_id": "tt0319343"
+}')
+echo "Response: $response"
+
+
 echo "Smoke tests completed."
 
 # Reset Database
