@@ -1,6 +1,5 @@
 import pytest
-from app.models.user import User
-from app.models.watchlist import Watchlist
+from unittest.mock import Mock
 from app.utils.watchlist_utils import add_movie_to_watchlist
 
 
