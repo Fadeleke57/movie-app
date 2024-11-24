@@ -51,4 +51,29 @@ def add_movie_to_watchlist(username, imdb_id):
 
     logger.info(f"Added movie '{movie.get('title')}' to {username}'s watchlist successfully.")
 
+def delete_movie_from_watchlist(username, imdb_id):
+    """
+    Deletes a movie from user's watchlist.
+
+    Arguments:
+        username (str): The username of user.
+        imdb_id (str): The IMDb of the movie.
+
+    Raises:
+        ValueError: If user is not found.
+        ValueError: If watchlist entry is not found.
+    """
+    user = User.query.filter_by(username=username).first()
+    if not user:
+        raise ValueError("User not found")
+
+    watchlist_entry = Watchlist.query.filter_by(user_id=user.id, imdb_id=imdb_id).first()
+    if not watchlist_entry:
+        raise ValueError("Watchlist entry not found")
+
+    db.session.delete(watchlist_entry)
+    db.session.commit()
+
+    logger.info(f"Deleted movie '{watchlist_entry.title}' from {username}'s watchlist successfully.")
+
     
