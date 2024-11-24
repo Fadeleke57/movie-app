@@ -1,4 +1,5 @@
 from flask import Blueprint, request, jsonify
+from app.utils.logger import logger
 import requests
 
 from app.utils.omdb import (
@@ -20,10 +21,13 @@ def search_by_title():
 
     try:
         data = fetch_movie_by_title(title, year, plot)
+        logger.info(data)
         return jsonify(data), 200
     except ValueError as e:
+        logger.error(str(e))
         return jsonify({"error": str(e)}), 400
     except requests.RequestException:
+        logger.error("Failed to fetch data from OMDB API")
         return jsonify({"error": "Failed to fetch data from OMDB API"}), 500
 
 @search_bp.route('/search-by-id', methods=['GET'])
@@ -33,8 +37,10 @@ def search_by_id():
 
     try:
         data = fetch_movie_by_id(movie_id, plot)
+        logger.info(data)
         return jsonify(data), 200
     except ValueError as e:
+        logger.error(str(e))
         return jsonify({"error": str(e)}), 400
     except requests.RequestException:
         return jsonify({"error": "Failed to fetch data from OMDB API"}), 500
@@ -48,10 +54,13 @@ def search_by_keyword_route():
 
     try:
         data = search_movies_by_keyword(keyword, year, content_type, page)
+        logger.info(data)
         return jsonify(data), 200
     except ValueError as e:
+        logger.error(str(e))
         return jsonify({"error": str(e)}), 400
     except requests.RequestException:
+        logger.error("Failed to fetch data from OMDB API")
         return jsonify({"error": "Failed to fetch data from OMDB API"}), 500
 
 @search_bp.route('/search-random-movie', methods=['GET'])
@@ -78,10 +87,13 @@ def top_rated_movies_route():
 
     try:
         data = fetch_top_rated_movies(top_movies)
+        logger.info(data)
         return jsonify(data), 200
     except ValueError as e:
+        logger.error(str(e))
         return jsonify({"error": str(e)}), 400
     except requests.RequestException:
+        logger.error("Failed to fetch data from OMDB API")
         return jsonify({"error": "Failed to fetch data from OMDB API"}), 500
 
 
