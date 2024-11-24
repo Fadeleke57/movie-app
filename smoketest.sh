@@ -4,6 +4,13 @@ BASE_URL="http://127.0.0.1:5000"
 
 echo "Starting smoke tests..."
 
+#Test Health Check
+health_check(){
+echo "Testing /health endpoint..."
+response=$(curl -s -X GET "$BASE_URL/api/health")
+echo "Response: $response"
+}
+
 # Test User Account Creation
 echo "Testing /user/create-account endpoint..."
 response=$(curl -s -X POST "$BASE_URL/user/create-account" -H "Content-Type: application/json" -d '{
@@ -62,6 +69,13 @@ response=$(curl -s -X POST "$BASE_URL/watchlist/add-to-watchlist" -H "Content-Ty
 }')
 echo "Response: $response"
 
+#Test Delete From Watchlist
+echo "Testing /delete-from-watchlist endpoint..."
+response=$(curl -s -X DELETE "$BASE_URL/watchlist/delete-from-watchlist" -H "Content-Type: application/json" -d '{
+  "username": "testuser123",
+  "imdb_id": "tt0319343"
+}')
+echo "Response: $response"
 
 echo "Smoke tests completed."
 
