@@ -129,7 +129,6 @@ This is a Flask-based API for managing movie-related functionalities, including 
   - [Health Check](#health-check)
   - [User Account Management](#user-account-management)
   - [Movie Search](#movie-search)
-- [Setup and Running the Application](#setup-and-running-the-application)
 
 ---
 
@@ -208,21 +207,20 @@ This is a Flask-based API for managing movie-related functionalities, including 
     ```
   - **Error**: `400 Bad Request`, `401 Unauthorized`, or `404 Not Found`
 
-
+---
 ### Movie Search
 
-#### Search by Keyword
-- **URL**: `/search/keyword`
+#### Search by Title
+- **URL**: `/search-by-title`
 - **Method**: `GET`
 - **Query Parameters**:
-  - `search_type` (string, required): Must be either `"title"` or `"id"`.
-  - `value` (string, required): The movie title or IMDb ID to search for.
+  - `title` (string, required): The title of the movie.
   - `year` (integer, optional): Filter results by release year.
   - `plot` (string, optional): Must be `"short"` or `"full"`. Determines the length of the plot summary.
-  
+
 - **Example Request**:
   ```bash
-  curl "http://127.0.0.1:5000/search/keyword?search_type=title&value=Inception&year=2010&plot=full"
+  curl "http://127.0.0.1:5000/search-by-title?title=Inception&year=2010&plot=full"
   ```
 
 - **Response**:
@@ -237,22 +235,50 @@ This is a Flask-based API for managing movie-related functionalities, including 
   - **Error**: `400 Bad Request`
     ```json
     {
-      "error": "Missing or invalid 'search_type' parameter. Must be 'title' or 'id'."
+      "error": "Missing 'title' parameter."
     }
     ```
 
-#### Search by Includes
-- **URL**: `/search/includes`
+#### Search by ID
+- **URL**: `/search-by-id`
 - **Method**: `GET`
 - **Query Parameters**:
-  - `query` (string, required): The search query for movies, series, or episodes.
+  - `id` (string, required): The IMDb ID of the movie.
+  - `plot` (string, optional): Must be `"short"` or `"full"`. Determines the length of the plot summary.
+
+- **Example Request**:
+  ```bash
+  curl "http://127.0.0.1:5000/search-by-id?id=tt1375666&plot=short"
+  ```
+
+- **Response**:
+  - **Success**: `200 OK`
+    ```json
+    {
+      "Title": "Inception",
+      "Year": "2010",
+      "Plot": "A skilled thief who steals secrets..."
+    }
+    ```
+  - **Error**: `400 Bad Request`
+    ```json
+    {
+      "error": "Missing 'id' parameter."
+    }
+    ```
+
+#### Search by Keyword
+- **URL**: `/search-by-keyword`
+- **Method**: `GET`
+- **Query Parameters**:
+  - `keyword` (string, required): The search keyword.
   - `year` (integer, optional): Filter results by release year.
   - `content_type` (string, optional): Must be `"movie"`, `"series"`, or `"episode"`. Filters results by content type.
   - `page` (integer, optional): Specifies the page number for paginated results. Defaults to 1.
 
 - **Example Request**:
   ```bash
-  curl "http://127.0.0.1:5000/search/includes?query=star&year=1977&content_type=movie&page=1"
+  curl "http://127.0.0.1:5000/search-by-keyword?keyword=star&year=1977&content_type=movie&page=1"
   ```
 
 - **Response**:
@@ -278,10 +304,72 @@ This is a Flask-based API for managing movie-related functionalities, including 
   - **Error**: `400 Bad Request`
     ```json
     {
-      "error": "Missing 'query' parameter."
+      "error": "Missing 'keyword' parameter."
     }
     ```
 
+#### Search Random Movie
+- **URL**: `/search-random-movie`
+- **Method**: `GET`
+- **Query Parameters**:
+  - `plot` (string, optional): Must be `"short"` or `"full"`. Determines the length of the plot summary.
+
+- **Example Request**:
+  ```bash
+  curl "http://127.0.0.1:5000/search-random-movie?plot=short"
+  ```
+
+- **Response**:
+  - **Success**: `200 OK`
+    ```json
+    {
+      "Title": "Avatar",
+      "Year": "2009",
+      "Plot": "A paraplegic Marine is dispatched to the moon Pandora..."
+    }
+    ```
+  - **Error**: `500 Internal Server Error`
+    ```json
+    {
+      "error": "Failed to fetch data from OMDB API"
+    }
+    ```
+
+#### Top Rated Movies
+- **URL**: `/top-rated-movies`
+- **Method**: `GET`
+
+- **Example Request**:
+  ```bash
+  curl "http://127.0.0.1:5000/top-rated-movies"
+  ```
+
+- **Response**:
+  - **Success**: `200 OK`
+    ```json
+    [
+      {
+        "Title": "The Shawshank Redemption",
+        "Year": "1994",
+        "imdbID": "tt0111161",
+        "Type": "movie",
+        "Poster": "http://example.com/poster1.jpg"
+      },
+      {
+        "Title": "The Godfather",
+        "Year": "1972",
+        "imdbID": "tt0068646",
+        "Type": "movie",
+        "Poster": "http://example.com/poster2.jpg"
+      }
+    ]
+    ```
+  - **Error**: `500 Internal Server Error`
+    ```json
+    {
+      "error": "Failed to fetch data from OMDB API"
+    }
+    ```
 ---
 
 ## Common Commands
