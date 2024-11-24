@@ -396,11 +396,34 @@ This is a Flask-based API for managing movie-related functionalities, including 
 - **Example Response**:
     ```json
     {
-        "message": "Movie added to name's watchlist",
-        "status": "201" 
+        "message": "Movie added to name's watchlist"
     }
     ```
 
+#### Delete Movie from WatchList by Movie ID
+- **Route**: `/delete-from-watchlist`
+- **Request Type**: `DELETE`
+- **Request Body**:
+  - `username` (string, required): The username of the user.
+  - `imdb_id` (string, required): The imdb_id of the movie you are trying to delete.
+- **Request Format**: JSON
+    - **Success Response Example:**
+        - code: 200
+        - content: {"message": "Movie deleted from {username}'s watchlist"}
+- **Example Request**:
+  ```json
+  {
+    "username": "name",
+    "imdb_id": "tt0319343",
+  }
+  ```
+
+- **Example Response**:
+    ```json
+    {
+        "message": "Movie deleted from name's watchlist"
+    }
+    ```
 ---
 
 ## Common Commands
