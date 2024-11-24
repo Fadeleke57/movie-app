@@ -385,7 +385,7 @@ This is a Flask-based API for managing movie-related functionalities, including 
     - **Success Response Example:**
         - code: 201
         - content: {"message": "Movie added to {username}'s watchlist"}
-  **Example Request**:
+- **Example Request**:
   ```json
   {
     "username": "name",
