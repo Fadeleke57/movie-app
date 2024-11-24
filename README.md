@@ -120,6 +120,19 @@ to run the tests:
 
 ---
 
+# Movie App API
+
+This is a Flask-based API for managing movie-related functionalities, including user account management, movie search, and more.
+
+## Table of Contents
+- [API Endpoints](#api-endpoints)
+  - [Health Check](#health-check)
+  - [User Account Management](#user-account-management)
+  - [Movie Search](#movie-search)
+- [Setup and Running the Application](#setup-and-running-the-application)
+
+---
+
 ## API Endpoints
 
 ### Health Check
@@ -132,6 +145,8 @@ to run the tests:
     "status": "App is running!"
   }
   ```
+
+---
 
 ### User Account Management
 
@@ -192,6 +207,80 @@ to run the tests:
     }
     ```
   - **Error**: `400 Bad Request`, `401 Unauthorized`, or `404 Not Found`
+
+
+### Movie Search
+
+#### Search by Keyword
+- **URL**: `/search/keyword`
+- **Method**: `GET`
+- **Query Parameters**:
+  - `search_type` (string, required): Must be either `"title"` or `"id"`.
+  - `value` (string, required): The movie title or IMDb ID to search for.
+  - `year` (integer, optional): Filter results by release year.
+  - `plot` (string, optional): Must be `"short"` or `"full"`. Determines the length of the plot summary.
+  
+- **Example Request**:
+  ```bash
+  curl "http://127.0.0.1:5000/search/keyword?search_type=title&value=Inception&year=2010&plot=full"
+  ```
+
+- **Response**:
+  - **Success**: `200 OK`
+    ```json
+    {
+      "Title": "Inception",
+      "Year": "2010",
+      "Plot": "A skilled thief who steals secrets..."
+    }
+    ```
+  - **Error**: `400 Bad Request`
+    ```json
+    {
+      "error": "Missing or invalid 'search_type' parameter. Must be 'title' or 'id'."
+    }
+    ```
+
+#### Search by Includes
+- **URL**: `/search/includes`
+- **Method**: `GET`
+- **Query Parameters**:
+  - `query` (string, required): The search query for movies, series, or episodes.
+  - `year` (integer, optional): Filter results by release year.
+  - `content_type` (string, optional): Must be `"movie"`, `"series"`, or `"episode"`. Filters results by content type.
+  - `page` (integer, optional): Specifies the page number for paginated results. Defaults to 1.
+
+- **Example Request**:
+  ```bash
+  curl "http://127.0.0.1:5000/search/includes?query=star&year=1977&content_type=movie&page=1"
+  ```
+
+- **Response**:
+  - **Success**: `200 OK`
+    ```json
+    [
+      {
+        "Title": "Star Wars",
+        "Year": "1977",
+        "imdbID": "tt0076759",
+        "Type": "movie",
+        "Poster": "http://example.com/poster.jpg"
+      },
+      {
+        "Title": "Star Wars: Episode V",
+        "Year": "1980",
+        "imdbID": "tt0080684",
+        "Type": "movie",
+        "Poster": "http://example.com/poster2.jpg"
+      }
+    ]
+    ```
+  - **Error**: `400 Bad Request`
+    ```json
+    {
+      "error": "Missing 'query' parameter."
+    }
+    ```
 
 ---
 
