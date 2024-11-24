@@ -84,6 +84,7 @@ def update_movie_from_watchlist(username, imdb_id, new_state):
     Arguments:
         username (str): The username of user.
         imdb_id (str): The IMDb of the movie.
+        new_state (str): The new watching state of the movie.
 
     Raises:
         ValueError: If user is not found.
