@@ -99,9 +99,9 @@ def test_add_movie_to_watchlist_user_not_found(mock_user_query):
 #Test if adding was usuccessful because movie not found
 def test_add_movie_to_watchlist_movie_not_found(mock_fetch_movie_by_id, mock_user_query, mock_db_session, app):
     mock_fetch_movie_by_id.return_value = None
-    with app.app_context():
-        mock_user_query.filter_by.return_value.first.return_value = Mock(id=1, username="test_user")
-        with pytest.raises(ValueError, match="Movie not found"):
+
+    mock_user_query.filter_by.return_value.first.return_value = Mock(id=1, username="test_user")
+    with pytest.raises(ValueError, match="Movie not found"):
             add_movie_to_watchlist("test_user", "tt1234567")
 
 #Test add duplicates
