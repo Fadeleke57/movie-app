@@ -371,37 +371,6 @@ This is a Flask-based API for managing movie-related functionalities, including 
       "error": "Failed to fetch data from OMDB API"
     }
     ```
-
-    ### Watchlist Management
-
-#### Add Movie to WatchList by Movie ID
-- **Route**: `/add-to-watchlist`
-- **Request Type**: `POST`
-- **Request Body**:
-  - `username` (string, required): The username of the user.
-  - `imdb_id` (string, required): The imdb_id of the movie you are trying to insert.
-- **Request Format**: JSON
-    - **Success Response Example:**
-        - code: 201
-        - content: {"message": "Movie added to {username}'s watchlist"}
-  **Example Request**:
-  ```json
-  {
-    "username": "name",
-    "imdb_id": "tt0319343",
-  }
-  ```
-
-- **Example Response**:
-    ```json
-    {
-        "message": "Movie added to {username}'s watchlist",
-        "status": "201" 
-    }
-    ```
-
----
-
 ---
 
 ### Watchlist Management
