@@ -88,6 +88,16 @@ A simple Flask-based movie application that integrates with the OMDB API for fet
 
 ---
 
+## Testing
+
+unit tests are in the tests folder
+to run the tests:
+   ```bash
+   python -m pytest tests/
+   ```
+
+---
+
 ### Using Docker
 
 1. **Build the Docker Image**
