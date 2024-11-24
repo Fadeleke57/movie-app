@@ -9,7 +9,7 @@ from app.utils.watchlist_utils import (
 
 watchlist_bp = Blueprint('watchlist', __name__)
 
-@watchlist_bp.route('/add_to_watchlist', methods=['POST'])
+@watchlist_bp.route('/add-to-watchlist', methods=['POST'])
 def add_to_watchlist():
     """
     Route to create a new watchlist for a user.
