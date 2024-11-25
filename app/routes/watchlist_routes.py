@@ -106,7 +106,7 @@ def update_watchlist():
     Expects JSON Input:
         - username(str): username of user
         - imdb_id(str): IMDb ID of movie
-        - watch_state(str): watching state is either 'To Watch' or 'Watched' or 'Watch Next'
+        - watching_state(str): watching state is either 'To Watch' or 'Watched' or 'Watch Next'
     
     Returns:
         JSON response indicating the success of deleting a watchlist.
