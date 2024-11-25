@@ -142,7 +142,7 @@ def get_user_watchlist (username):
         raise ValueError(f"No movies found in watchlist for {username}")
 
     user_watchlist_data = []
-    for movie in user_watchlist_data:
+    for movie in user_watchlist:
         movie_data = {
             'imdb_id': movie.imdb_id,
             'title': movie.title,
