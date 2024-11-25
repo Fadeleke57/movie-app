@@ -77,6 +77,15 @@ response=$(curl -s -X DELETE "$BASE_URL/watchlist/delete-from-watchlist" -H "Con
 }')
 echo "Response: $response"
 
+#Test Update Watchlist
+echo "Testing /update-watchlist endpoint..."
+response=$(curl -s -X PUT "$BASE_URL/watchlist/update-watchlist" -H "Content-Type: application/json" -d '{
+  "username": "testuser123",
+  "imdb_id": "tt0319343"
+  "watching_state": "Watch Next"
+}')
+echo "Response: $response"
+
 echo "Smoke tests completed."
 
 # Reset Database
