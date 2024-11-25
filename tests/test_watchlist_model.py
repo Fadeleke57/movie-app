@@ -5,7 +5,8 @@ from unittest.mock import Mock
 from app.utils.watchlist_utils import (
     add_movie_to_watchlist,
     delete_movie_from_watchlist,
-    update_movie_from_watchlist
+    update_movie_from_watchlist,
+    get_user_watchlist
 )
 
 @pytest.fixture
@@ -227,5 +228,75 @@ def test_update_movie_from_watchlist_invalid_watching_state(mock_db_session, moc
 
     with pytest.raises(ValueError, match="New state must be 'To Watch' or 'Watched' or 'Watch Next'"):
         update_movie_from_watchlist(username, imdb_id, new_state)
+
+#Test if getting user watchlist was successful
+def test_get_watchlist_successful(mock_db_session, mock_user_query, mock_watchlist_query, mock_fetch_movie_by_id):
+    mock_user = Mock(id=1, username="test_user")
+    mock_user_query.filter_by.return_value.first.return_value = mock_user
+    username = mock_user.username
+
+    movie_data = {   
+        "title": "Elf",
+        "imdb_id": "tt0319343",
+        "year": "2021",
+        "rated": "PG",
+        "runtime": "97 min",
+        "plot": "Raised as an oversized elf, Buddy travels from the North Pole to New York City to meet his biological father, Walter Hobbs, who doesn't know he exists and is in desperate need of some Christmas spirit.",
+        "genre": "Adventure, Comedy, Family",
+        "imdb_rating": "7.1",
+        "type": "movie"
+        }
+    
+    mock_fetch_movie_by_id.return_value = movie_data
+    imdb_id = movie_data["imdb_id"]
+    title = movie_data["title"]
+    year = movie_data["year"]
+    rated = movie_data["rated"]
+    runtime = movie_data["runtime"]
+    plot = movie_data["plot"]
+    genre = movie_data["genre"]
+    imdb_rating = movie_data["imdb_rating"]
+    type = movie_data["type"]
+
+    mock_watchlist_entry1 = Mock(user_id=mock_user.id, title=title, year=year, rated=rated, runtime=runtime, plot=plot, genre=genre, imdb_rating=imdb_rating, type=type, imdb_id=imdb_id, watching_state="To Watch")
+    mock_watchlist_entry2 = Mock(user_id=2, title=title, year=year, rated=rated, runtime=runtime, plot=plot, genre=genre, imdb_rating=imdb_rating, type=type, imdb_id=imdb_id, watching_state="To Watch")
+
+    filtered_entries = []
+    for entry in [mock_watchlist_entry1, mock_watchlist_entry2]:
+        if entry.user_id == mock_user.id:
+            filtered_entries.append(entry)
+
+    mock_watchlist_query.filter_by.return_value.all = Mock(return_value=filtered_entries)
+
+    assert username == "test_user"
+    assert imdb_id == "tt0319343"
+    user_watchlist = get_user_watchlist(username)
+
+    expected_user_watchlist = [{
+        'imdb_id': mock_watchlist_entry1.imdb_id,
+        'title': movie_data['title'],
+        'year': movie_data["year"],
+        'rated': movie_data["rated"],  
+        'runtime': movie_data["runtime"],  
+        'plot': movie_data["plot"], 
+        'genre': movie_data["genre"],  
+        'imdb_rating': movie_data["imdb_rating"], 
+        'type': movie_data["type"],  
+        'watching_state': mock_watchlist_entry1.watching_state
+    }]
+
+    assert user_watchlist == expected_user_watchlist
+
+#Test if getting watchlist was unsuccessful because user not found
+def test_get_watchlist_user_not_found(mock_db_session, mock_user_query, mock_watchlist_query, mock_fetch_movie_by_id):
+    mock_user_query.filter_by.return_value.first.return_value = None
+    with pytest.raises(ValueError, match="User not found"):
+        get_user_watchlist("non_existent_user")
+
+#Test if getting watchlist was unsuccessful because watchlist has no movies
+def test_get_watchlist_no_movies(mock_db_session, mock_user_query, mock_watchlist_query, mock_fetch_movie_by_id):
+    mock_watchlist_query.filter_by.return_value.all = Mock(return_value=[])
+    with pytest.raises(ValueError, match="No movies found in watchlist for test_user"):
+        get_user_watchlist("test_user")
 
 
