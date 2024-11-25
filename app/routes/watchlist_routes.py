@@ -6,7 +6,8 @@ from app.models.user import User
 from app.utils.watchlist_utils import (
     add_movie_to_watchlist,
     delete_movie_from_watchlist,
-    update_movie_from_watchlist
+    update_movie_from_watchlist,
+    get_user_watchlist
 )
 
 watchlist_bp = Blueprint('watchlist', __name__)
@@ -148,4 +149,45 @@ def update_watchlist():
         logger.error(f"Unexpected error: {str(e)}")
         return jsonify({"error": "An unexpected error occurred"}), 500
     
-                
+@watchlist_bp.route('/get-watchlist', methods=['GET'])
+def get_watchlist():    
+    """
+    Route to get a watchlist for a user.
+    
+    Expects JSON Input:
+        - username(str): username of user
+     
+    Returns:
+        JSON response indicating the success of getting user watchlist.
+
+    Raises:
+        400 error if invalid input
+        404 error if username not found
+        500 error if unexcepted error occurred
+    """
+    logger.info("Getting watchlist")
+    
+    try:
+        data = request.get_json()
+        username = data.get('username')
+
+    #check if valid input
+        if not username :
+            return jsonify({'error': 'Username required'}), 400
+
+    #check if user exists
+        user = User.query.filter_by(username=username).first()
+        if not user:
+            return jsonify({'error': 'User not found'}), 404
+        
+    #Get user watchlist
+        user_watchlist = get_user_watchlist(username)
+        logger.info(f"Got {username}'s watchlist")
+        return jsonify({"message": f"{username}'s watchlist", "watchlist": user_watchlist}), 200
+
+
+    #Handle unexpected errors
+    except Exception as e:
+        logger.error(f"Unexpected error: {str(e)}")
+        return jsonify({"error": "An unexpected error occurred"}), 500
+    
