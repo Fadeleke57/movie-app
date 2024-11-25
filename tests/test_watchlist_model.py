@@ -5,7 +5,7 @@ from unittest.mock import Mock
 from app.utils.watchlist_utils import (
     add_movie_to_watchlist,
     delete_movie_from_watchlist,
-
+    update_movie_from_watchlist
 )
 
 @pytest.fixture
@@ -163,4 +163,69 @@ def test_delete_movie_from_watchlist_watchlist_entry_not_found(mock_db_session, 
     mock_watchlist_query.filter_by.return_value.first.return_value = None
 
     with pytest.raises(ValueError, match="Watchlist entry not found"):
-            delete_movie_from_watchlist(username, imdb_id)
+        delete_movie_from_watchlist(username, imdb_id)
+
+#Test if updating was successful
+def test_update_movie_from_watchlist_successful(mock_db_session, mock_user_query, mock_watchlist_query, mock_fetch_movie_by_id):
+    mock_user = Mock(id=1, username="test_user")
+    mock_user_query.filter_by.return_value.first.return_value = mock_user
+    username = mock_user.username
+
+    movie_data = { "title": "Elf", "imdb_id": "tt0319343"}
+    mock_fetch_movie_by_id.return_value = movie_data
+    imdb_id = movie_data["imdb_id"]
+
+    mock_watchlist_entry = Mock(user_id=mock_user.id, imdb_id=imdb_id, watching_state="To Watch")
+    mock_watchlist_query.filter_by.return_value.first.return_value = mock_watchlist_entry
+
+    assert username == "test_user"
+    assert imdb_id == "tt0319343"
+    new_state = "Watch Next"
+
+    update_movie_from_watchlist(username, imdb_id, new_state)
+    
+    print(mock_watchlist_query.filter_by.return_value.first.return_value)
+    mock_db_session.commit.assert_called_once()
+    assert mock_watchlist_entry.watching_state == new_state
+    assert mock_watchlist_entry.imdb_id == imdb_id
+    assert mock_watchlist_entry.user_id == mock_user.id
+   
+#Test if updating was unsuccessful because user not found
+def test_update_movie_from_watchlist_user_not_found(mock_db_session, mock_user_query, mock_watchlist_query, mock_fetch_movie_by_id):
+    mock_user_query.filter_by.return_value.first.return_value = None
+    with pytest.raises(ValueError, match="User not found"):
+        update_movie_from_watchlist("non_existent_user", "tt1234567", "Watch Next")
+
+#Test if updating was unsuccessful because watchlist entry not found
+def test_update_movie_from_watchlist_watchlist_entry_not_found(mock_db_session, mock_user_query, mock_watchlist_query, mock_fetch_movie_by_id):
+    mock_user = Mock(id=1, username="test_user")
+    mock_user_query.filter_by.return_value.first.return_value = mock_user
+    username = mock_user.username
+
+    movie_data = { "title": "Elf", "imdb_id": "tt0319343"}
+    mock_fetch_movie_by_id.return_value = movie_data
+    imdb_id = movie_data["imdb_id"]
+    
+    mock_watchlist_query.filter_by.return_value.first.return_value = None
+
+    with pytest.raises(ValueError, match="Watchlist entry not found"):
+        update_movie_from_watchlist(username, imdb_id, "Watch Next")
+
+#Test if updating was unsuccessful because invalid watching state inputted not found
+def test_update_movie_from_watchlist_invalid_watching_state(mock_db_session, mock_user_query, mock_watchlist_query, mock_fetch_movie_by_id):
+    mock_user = Mock(id=1, username="test_user")
+    mock_user_query.filter_by.return_value.first.return_value = mock_user
+    username = mock_user.username
+
+    movie_data = { "title": "Elf", "imdb_id": "tt0319343"}
+    mock_fetch_movie_by_id.return_value = movie_data
+    imdb_id = movie_data["imdb_id"]
+
+    mock_watchlist_entry = Mock(user_id=mock_user.id, imdb_id=imdb_id, watching_state="To Watch")
+    mock_watchlist_query.filter_by.return_value.first.return_value = mock_watchlist_entry
+    new_state = "None"
+
+    with pytest.raises(ValueError, match="New state must be 'To Watch' or 'Watched' or 'Watch Next'"):
+        update_movie_from_watchlist(username, imdb_id, new_state)
+
+
