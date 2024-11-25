@@ -107,16 +107,16 @@ def update_movie_from_watchlist(username, imdb_id, new_state):
  
     if new_state == "Watch Next":
         movie = fetch_movie_by_id(imdb_id)
-        watchlist_entry.user_id = user.id,
-        watchlist_entry.title = movie.get('title'),
-        watchlist_entry.imdb_id=movie.get('imdb_id'),
-        watchlist_entry.year=movie.get('year'),
-        watchlist_entry.rated=movie.get('rated'),
-        watchlist_entry.runtime=movie.get('runtime'),
-        watchlist_entry.plot=movie.get('plot'),
-        watchlist_entry.genre=movie.get('genre'),
-        watchlist_entry.imdb_rating=movie.get('imdb_rating'),
-        watchlist_entry.type=movie.get('type'),
+        watchlist_entry.user_id = user.id
+        watchlist_entry.title = movie.get('title')
+        watchlist_entry.imdb_id=movie.get('imdb_id')
+        watchlist_entry.year=movie.get('year')
+        watchlist_entry.rated=movie.get('rated')
+        watchlist_entry.runtime=movie.get('runtime')
+        watchlist_entry.plot=movie.get('plot')
+        watchlist_entry.genre=movie.get('genre')
+        watchlist_entry.imdb_rating=movie.get('imdb_rating')
+        watchlist_entry.type=movie.get('type')
         watchlist_entry.watching_state="Watch Next" 
     
     db.session.commit()
