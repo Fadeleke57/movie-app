@@ -425,7 +425,7 @@ This is a Flask-based API for managing movie-related functionalities, including 
     }
     ```
 
-#### Update Movie from WatchList by Movie ID
+#### Update Movie and Watching State from WatchList by Movie ID
 - **Route**: `/update-watchlist`
 - **Request Type**: `PUT`
 - **Request Body**:
@@ -449,6 +449,29 @@ This is a Flask-based API for managing movie-related functionalities, including 
     ```json
     {
         "message": "Movie updated from name's watchlist"
+    }
+    ```
+
+#### Get WatchList by Username
+- **Route**: `get-watchlist`
+- **Request Type**: `GET`
+- **Request Body**:
+  - `username` (string, required): The username of the user.
+- **Request Format**: JSON
+    - **Success Response Example:**
+        - code: 200
+        - content: {"message": f"{username}'s watchlist", "watchlist": user_watchlist}
+- **Example Request**:
+  ```json
+  {
+    "username": "name",
+  }
+  ```
+
+- **Example Response**:
+    ```json
+    {
+        "message": "name's watchlist, watchlist: [{'imdb_id': 'tt0319343', 'title': 'Elf', 'year': '2021', 'rated': 'PG', 'runtime': '97 min', 'plot': 'Raised as an oversized elf, Buddy travels from the North Pole to New York City to meet his biological father, Walter Hobbs, who doesn't know he exists and is in desperate need of some Christmas spirit.', 'genre': 'Adventure, Comedy, Family', 'imdb_rating': '7.1', 'type': 'movie', 'watching_state': 'To Watch'}]"
     }
     ```
 ---
