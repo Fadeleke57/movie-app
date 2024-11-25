@@ -86,6 +86,13 @@ response=$(curl -s -X PUT "$BASE_URL/watchlist/update-watchlist" -H "Content-Typ
 }')
 echo "Response: $response"
 
+#Test Get Watchlist
+echo "Testing /get-watchlist endpoint..."
+response=$(curl -s -X GET "$BASE_URL/watchlist/get-watchlist" -H "Content-Type: application/json" -d '{
+  "username": "testuser123"
+}')
+echo "Response: $response"
+
 echo "Smoke tests completed."
 
 # Reset Database
