@@ -121,3 +121,24 @@ def update_movie_from_watchlist(username, imdb_id, new_state):
     
     db.session.commit()
     logger.info(f"Updated '{watchlist_entry.title}' for {username}")
+
+def get_user_watchlist (username):
+    """
+    Gets all movies for a user 
+
+    Arguments:
+        username (str): The username of user.
+
+    Raises:
+        ValueError: If user is not found.
+        ValueError: If user has no movies.
+    """
+    user = User.query.filter_by(username=username).first()
+    if not user:
+        raise ValueError("User not found")
+
+    user_watchlist = Watchlist.query.filter_by(user_id=user.id).all()
+    if len(user_watchlist) == 0:
+        raise ValueError(f"No movies found in watchlist for {username}")
+
+    return user_watchlist
