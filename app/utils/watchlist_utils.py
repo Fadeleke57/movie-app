@@ -141,4 +141,20 @@ def get_user_watchlist (username):
     if len(user_watchlist) == 0:
         raise ValueError(f"No movies found in watchlist for {username}")
 
-    return user_watchlist
+    user_watchlist_data = []
+    for movie in user_watchlist_data:
+        movie_data = {
+            'imdb_id': movie.imdb_id,
+            'title': movie.title,
+            'year': movie.year,
+            'rated': movie.rated,
+            'runtime': movie.runtime,
+            'plot': movie.plot,
+            'genre': movie.genre,
+            'imdb_rating': movie.imdb_rating,
+            'type': movie.type,
+            'watching_state': movie.watching_state
+        }
+        user_watchlist_data.append(movie_data)
+
+    return user_watchlist_data
