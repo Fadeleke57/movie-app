@@ -424,6 +424,33 @@ This is a Flask-based API for managing movie-related functionalities, including 
         "message": "Movie deleted from name's watchlist"
     }
     ```
+
+#### Update Movie from WatchList by Movie ID
+- **Route**: `/update-watchlist`
+- **Request Type**: `PUT`
+- **Request Body**:
+  - `username` (string, required): The username of the user.
+  - `imdb_id` (string, required): The imdb_id of the movie you are trying to delete.
+  - `watching_state` (string, required): The watching state is either 'To Watch' or 'Watched' or 'Watch Next'
+- **Request Format**: JSON
+    - **Success Response Example:**
+        - code: 200
+        - content: {"message": "Movie updated from {username}'s watchlist"}
+- **Example Request**:
+  ```json
+  {
+    "username": "name",
+    "imdb_id": "tt0319343",
+    "watching_state": "Watching Next"
+  }
+  ```
+
+- **Example Response**:
+    ```json
+    {
+        "message": "Movie updated from name's watchlist"
+    }
+    ```
 ---
 
 ## Common Commands
