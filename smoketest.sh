@@ -5,11 +5,10 @@ BASE_URL="http://127.0.0.1:5000"
 echo "Starting smoke tests..."
 
 #Test Health Check
-health_check(){
 echo "Testing /health endpoint..."
 response=$(curl -s -X GET "$BASE_URL/api/health")
 echo "Response: $response"
-}
+
 
 # Test User Account Creation
 echo "Testing /user/create-account endpoint..."
