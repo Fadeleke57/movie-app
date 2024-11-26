@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 import requests
 import os
-from app.routes.user_routes import logger
+from app.utils.logger import logger
 from app.models.user import User
 from app.utils.watchlist_utils import (
     add_movie_to_watchlist,
