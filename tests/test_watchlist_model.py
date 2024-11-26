@@ -55,15 +55,15 @@ def mock_fetch_movie_by_id(mocker, app):
     with app.app_context():
         mock_fetch_movie_by_id = Mock()
         mock_fetch_movie_by_id.return_value = {
-            "title": "Elf",
-            "imdb_id": "tt0319343",
-            "year": "2021",
-            "rated": "PG",
-            "runtime": "97 min",
-            "plot": "Raised as an oversized elf, Buddy travels from the North Pole to New York City to meet his biological father, Walter Hobbs, who doesn't know he exists and is in desperate need of some Christmas spirit.",
-            "genre": "Adventure, Comedy, Family",
-            "imdb_rating": "7.1",
-            "type": "movie"
+            "Title": "Elf",
+            "imdbID": "tt0319343",
+            "Year": "2021",
+            "Rated": "PG",
+            "Runtime": "97 min",
+            "Plot": "Raised as an oversized elf, Buddy travels from the North Pole to New York City to meet his biological father, Walter Hobbs, who doesn't know he exists and is in desperate need of some Christmas spirit.",
+            "Genre": "Adventure, Comedy, Family",
+            "imdbRating": "7.1",
+            "Type": "movie"
         }
         mocker.patch("app.utils.watchlist_utils.fetch_movie_by_id", mock_fetch_movie_by_id)
         return mock_fetch_movie_by_id
@@ -81,8 +81,19 @@ def test_add_movie_to_watchlist_successful(mock_db_session, mock_user_query, moc
     mock_watchlist_query.filter_by.return_value.first.return_value = None
     mock_user = mock_user_query.filter_by.return_value.first.return_value
     username = mock_user.username     
-    movie_data = mock_fetch_movie_by_id()
-    imdb_id = movie_data["imdb_id"]
+    mock_fetch_movie_by_id.return_value = {
+            "Title": "Elf",
+            "imdbID": "tt0319343",
+            "Year": "2021",
+            "Rated": "PG",
+            "Runtime": "97 min",
+            "Plot": "Raised as an oversized elf, Buddy travels from the North Pole to New York City to meet his biological father, Walter Hobbs, who doesn't know he exists and is in desperate need of some Christmas spirit.",
+            "Genre": "Adventure, Comedy, Family",
+            "imdbRating": "7.1",
+            "Type": "movie"
+        }
+    movie_data = mock_fetch_movie_by_id.return_value
+    imdb_id = movie_data["imdbID"]
 
     assert username == "test_user"
     assert imdb_id == "tt0319343"
@@ -113,8 +124,19 @@ def test_add_movie_to_watchlist_movie_not_found(mock_db_session, mock_user_query
 def test_add_movie_already_in_watchlist(mock_db_session, mock_user_query, mock_watchlist_query, mock_fetch_movie_by_id):
     mock_user = mock_user_query.filter_by.return_value.first.return_value
     username = mock_user.username     
-    movie_data = mock_fetch_movie_by_id()
-    imdb_id = movie_data["imdb_id"]
+    mock_fetch_movie_by_id.return_value = {
+            "Title": "Elf",
+            "imdbID": "tt0319343",
+            "Year": "2021",
+            "Rated": "PG",
+            "Runtime": "97 min",
+            "Plot": "Raised as an oversized elf, Buddy travels from the North Pole to New York City to meet his biological father, Walter Hobbs, who doesn't know he exists and is in desperate need of some Christmas spirit.",
+            "Genre": "Adventure, Comedy, Family",
+            "imdbRating": "7.1",
+            "Type": "movie"
+        }
+    movie_data = mock_fetch_movie_by_id.return_value
+    imdb_id = movie_data["imdbID"]
 
     mock_watchlist_query.filter_by.return_value.first.return_value = Mock(imdb_id=imdb_id)  # Movie exists
 
@@ -172,9 +194,19 @@ def test_update_movie_from_watchlist_successful(mock_db_session, mock_user_query
     mock_user_query.filter_by.return_value.first.return_value = mock_user
     username = mock_user.username
 
-    movie_data = { "title": "Elf", "imdb_id": "tt0319343"}
-    mock_fetch_movie_by_id.return_value = movie_data
-    imdb_id = movie_data["imdb_id"]
+    mock_fetch_movie_by_id.return_value = {
+            "Title": "Elf",
+            "imdbID": "tt0319343",
+            "Year": "2021",
+            "Rated": "PG",
+            "Runtime": "97 min",
+            "Plot": "Raised as an oversized elf, Buddy travels from the North Pole to New York City to meet his biological father, Walter Hobbs, who doesn't know he exists and is in desperate need of some Christmas spirit.",
+            "Genre": "Adventure, Comedy, Family",
+            "imdbRating": "7.1",
+            "Type": "movie"
+        }
+    movie_data = mock_fetch_movie_by_id.return_value
+    imdb_id = movie_data["imdbID"]
 
     mock_watchlist_entry = Mock(user_id=mock_user.id, imdb_id=imdb_id, watching_state="To Watch")
     mock_watchlist_query.filter_by.return_value.first.return_value = mock_watchlist_entry
@@ -185,7 +217,6 @@ def test_update_movie_from_watchlist_successful(mock_db_session, mock_user_query
 
     update_movie_from_watchlist(username, imdb_id, new_state)
     
-    print(mock_watchlist_query.filter_by.return_value.first.return_value)
     mock_db_session.commit.assert_called_once()
     assert mock_watchlist_entry.watching_state == new_state
     assert mock_watchlist_entry.imdb_id == imdb_id
@@ -273,16 +304,16 @@ def test_get_watchlist_successful(mock_db_session, mock_user_query, mock_watchli
     user_watchlist = get_user_watchlist(username)
 
     expected_user_watchlist = [{
-        'imdb_id': mock_watchlist_entry1.imdb_id,
-        'title': movie_data['title'],
-        'year': movie_data["year"],
-        'rated': movie_data["rated"],  
-        'runtime': movie_data["runtime"],  
-        'plot': movie_data["plot"], 
-        'genre': movie_data["genre"],  
-        'imdb_rating': movie_data["imdb_rating"], 
-        'type': movie_data["type"],  
-        'watching_state': mock_watchlist_entry1.watching_state
+        'imdbID': mock_watchlist_entry1.imdb_id,
+        'Title': movie_data['title'],
+        'Year': movie_data["year"],
+        'Rated': movie_data["rated"],  
+        'Runtime': movie_data["runtime"],  
+        'Plot': movie_data["plot"], 
+        'Genre': movie_data["genre"],  
+        'imdbRating': movie_data["imdb_rating"], 
+        'Type': movie_data["type"],  
+        'Watching State': mock_watchlist_entry1.watching_state
     }]
 
     assert user_watchlist == expected_user_watchlist
