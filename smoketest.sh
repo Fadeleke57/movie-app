@@ -68,14 +68,6 @@ response=$(curl -s -X POST "$BASE_URL/watchlist/add-to-watchlist" -H "Content-Ty
 }')
 echo "Response: $response"
 
-#Test Delete From Watchlist
-echo "Testing /delete-from-watchlist endpoint..."
-response=$(curl -s -X DELETE "$BASE_URL/watchlist/delete-from-watchlist" -H "Content-Type: application/json" -d '{
-  "username": "testuser123",
-  "imdb_id": "tt0319343"
-}')
-echo "Response: $response"
-
 #Test Update Watchlist
 echo "Testing /update-watchlist endpoint..."
 response=$(curl -s -X PUT "$BASE_URL/watchlist/update-watchlist" -H "Content-Type: application/json" -d '{
@@ -87,12 +79,22 @@ echo "Response: $response"
 
 #Test Get Watchlist
 echo "Testing /get-watchlist endpoint..."
-response=$(curl -s -X GET "$BASE_URL/watchlist/get-watchlist?username=testuser123")
+response=$(curl -s -X GET "$BASE_URL/watchlist/get-watchlist" -H "Content-Type: application/json" -d '{
+  "username": "testuser123"
+}')
+echo "Response: $response"
+
+#Test Delete From Watchlist
+echo "Testing /delete-from-watchlist endpoint..."
+response=$(curl -s -X DELETE "$BASE_URL/watchlist/delete-from-watchlist" -H "Content-Type: application/json" -d '{
+  "username": "testuser123",
+  "imdb_id": "tt0319343"
+}')
 echo "Response: $response"
 
 echo "Smoke tests completed."
 
 # Reset Database
-python3 manage.py drop_db
-python3 manage.py init_db
+# python3 manage.py drop_db
+# python3 manage.py init_db
 
