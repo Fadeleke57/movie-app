@@ -80,16 +80,14 @@ echo "Response: $response"
 echo "Testing /update-watchlist endpoint..."
 response=$(curl -s -X PUT "$BASE_URL/watchlist/update-watchlist" -H "Content-Type: application/json" -d '{
   "username": "testuser123",
-  "imdb_id": "tt0319343"
+  "imdb_id": "tt0319343",
   "watching_state": "Watch Next"
 }')
 echo "Response: $response"
 
 #Test Get Watchlist
 echo "Testing /get-watchlist endpoint..."
-response=$(curl -s -X GET "$BASE_URL/watchlist/get-watchlist" -H "Content-Type: application/json" -d '{
-  "username": "testuser123"
-}')
+response=$(curl -s -X GET "$BASE_URL/watchlist/get-watchlist?username=testuser123")
 echo "Response: $response"
 
 echo "Smoke tests completed."
