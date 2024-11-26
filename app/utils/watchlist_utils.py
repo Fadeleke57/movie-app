@@ -29,7 +29,7 @@ def add_movie_to_watchlist(username, imdb_id):
 
     existing_entry = Watchlist.query.filter_by(user_id=user.id, imdb_id=imdb_id).first()
     if existing_entry:
-        raise ValueError(f"Movie '{movie.get('title')}' is already in {username}'s watchlist.")
+        raise ValueError(f"Movie '{movie.get('Title')}' is already in {username}'s watchlist.")
 
     
     watchlist = Watchlist(
@@ -49,7 +49,7 @@ def add_movie_to_watchlist(username, imdb_id):
     db.session.add(watchlist)
     db.session.commit()
 
-    logger.info(f"Added movie '{movie.get('title')}' to {username}'s watchlist successfully.")
+    logger.info(f"Added movie '{movie.get('Title')}' to {username}'s watchlist successfully.")
 
 def delete_movie_from_watchlist(username, imdb_id):
     """
@@ -144,16 +144,16 @@ def get_user_watchlist (username):
     user_watchlist_data = []
     for movie in user_watchlist:
         movie_data = {
-            'imdb_id': movie.imdb_id,
-            'title': movie.title,
-            'year': movie.year,
-            'rated': movie.rated,
-            'runtime': movie.runtime,
-            'plot': movie.plot,
-            'genre': movie.genre,
-            'imdb_rating': movie.imdb_rating,
-            'type': movie.type,
-            'watching_state': movie.watching_state
+            'imdbID': movie.imdb_id,
+            'Title': movie.title,
+            'Year': movie.year,
+            'Rated': movie.rated,
+            'Runtime': movie.runtime,
+            'Plot': movie.plot,
+            'Genre': movie.genre,
+            'imdbRating': movie.imdb_rating,
+            'Type': movie.type,
+            'Watching State': movie.watching_state
         }
         user_watchlist_data.append(movie_data)
 
