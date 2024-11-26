@@ -26,8 +26,6 @@ def add_movie_to_watchlist(username, imdb_id):
     movie = fetch_movie_by_id(imdb_id)
     if not movie:
         raise ValueError("Movie not found")
-    
-    print(movie.keys())
 
     existing_entry = Watchlist.query.filter_by(user_id=user.id, imdb_id=imdb_id).first()
     if existing_entry:
