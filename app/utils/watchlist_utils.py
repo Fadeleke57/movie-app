@@ -2,7 +2,7 @@ from app.models.user import User
 from app.models.watchlist import Watchlist
 from app.utils.omdb import fetch_movie_by_id
 from app.utils.db import db
-from app.routes.user_routes import logger
+from app.utils.logger import logger
 
 
 def add_movie_to_watchlist(username, imdb_id):
