@@ -3,3 +3,4 @@ movieapp/
 __pycache__/
 .env
 /venv
+/instance
