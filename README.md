@@ -120,6 +120,19 @@ to run the tests:
 
 ---
 
+# Movie App API
+
+This is a Flask-based API for managing movie-related functionalities, including user account management, movie search, and more.
+
+## Table of Contents
+- [API Endpoints](#api-endpoints)
+  - [Health Check](#health-check)
+  - [User Account Management](#user-account-management)
+  - [Movie Search](#movie-search)
+  - [Watchlist Management](#watchlist-management)
+
+---
+
 ## API Endpoints
 
 ### Health Check
@@ -132,6 +145,8 @@ to run the tests:
     "status": "App is running!"
   }
   ```
+
+---
 
 ### User Account Management
 
@@ -193,6 +208,272 @@ to run the tests:
     ```
   - **Error**: `400 Bad Request`, `401 Unauthorized`, or `404 Not Found`
 
+---
+### Movie Search
+
+#### Search by Title
+- **URL**: `/search-by-title`
+- **Method**: `GET`
+- **Query Parameters**:
+  - `title` (string, required): The title of the movie.
+  - `year` (integer, optional): Filter results by release year.
+  - `plot` (string, optional): Must be `"short"` or `"full"`. Determines the length of the plot summary.
+
+- **Example Request**:
+  ```bash
+  curl "http://127.0.0.1:5000/search-by-title?title=Inception&year=2010&plot=full"
+  ```
+
+- **Response**:
+  - **Success**: `200 OK`
+    ```json
+    {
+      "Title": "Inception",
+      "Year": "2010",
+      "Plot": "A skilled thief who steals secrets..."
+    }
+    ```
+  - **Error**: `400 Bad Request`
+    ```json
+    {
+      "error": "Missing 'title' parameter."
+    }
+    ```
+
+#### Search by ID
+- **URL**: `/search-by-id`
+- **Method**: `GET`
+- **Query Parameters**:
+  - `id` (string, required): The IMDb ID of the movie.
+  - `plot` (string, optional): Must be `"short"` or `"full"`. Determines the length of the plot summary.
+
+- **Example Request**:
+  ```bash
+  curl "http://127.0.0.1:5000/search-by-id?id=tt1375666&plot=short"
+  ```
+
+- **Response**:
+  - **Success**: `200 OK`
+    ```json
+    {
+      "Title": "Inception",
+      "Year": "2010",
+      "Plot": "A skilled thief who steals secrets..."
+    }
+    ```
+  - **Error**: `400 Bad Request`
+    ```json
+    {
+      "error": "Missing 'id' parameter."
+    }
+    ```
+
+#### Search by Keyword
+- **URL**: `/search-by-keyword`
+- **Method**: `GET`
+- **Query Parameters**:
+  - `keyword` (string, required): The search keyword.
+  - `year` (integer, optional): Filter results by release year.
+  - `content_type` (string, optional): Must be `"movie"`, `"series"`, or `"episode"`. Filters results by content type.
+  - `page` (integer, optional): Specifies the page number for paginated results. Defaults to 1.
+
+- **Example Request**:
+  ```bash
+  curl "http://127.0.0.1:5000/search-by-keyword?keyword=star&year=1977&content_type=movie&page=1"
+  ```
+
+- **Response**:
+  - **Success**: `200 OK`
+    ```json
+    [
+      {
+        "Title": "Star Wars",
+        "Year": "1977",
+        "imdbID": "tt0076759",
+        "Type": "movie",
+        "Poster": "http://example.com/poster.jpg"
+      },
+      {
+        "Title": "Star Wars: Episode V",
+        "Year": "1980",
+        "imdbID": "tt0080684",
+        "Type": "movie",
+        "Poster": "http://example.com/poster2.jpg"
+      }
+    ]
+    ```
+  - **Error**: `400 Bad Request`
+    ```json
+    {
+      "error": "Missing 'keyword' parameter."
+    }
+    ```
+
+#### Search Random Movie
+- **URL**: `/search-random-movie`
+- **Method**: `GET`
+- **Query Parameters**:
+  - `plot` (string, optional): Must be `"short"` or `"full"`. Determines the length of the plot summary.
+
+- **Example Request**:
+  ```bash
+  curl "http://127.0.0.1:5000/search-random-movie?plot=short"
+  ```
+
+- **Response**:
+  - **Success**: `200 OK`
+    ```json
+    {
+      "Title": "Avatar",
+      "Year": "2009",
+      "Plot": "A paraplegic Marine is dispatched to the moon Pandora..."
+    }
+    ```
+  - **Error**: `500 Internal Server Error`
+    ```json
+    {
+      "error": "Failed to fetch data from OMDB API"
+    }
+    ```
+
+#### Top Rated Movies
+- **URL**: `/top-rated-movies`
+- **Method**: `GET`
+
+- **Example Request**:
+  ```bash
+  curl "http://127.0.0.1:5000/top-rated-movies"
+  ```
+
+- **Response**:
+  - **Success**: `200 OK`
+    ```json
+    [
+      {
+        "Title": "The Shawshank Redemption",
+        "Year": "1994",
+        "imdbID": "tt0111161",
+        "Type": "movie",
+        "Poster": "http://example.com/poster1.jpg"
+      },
+      {
+        "Title": "The Godfather",
+        "Year": "1972",
+        "imdbID": "tt0068646",
+        "Type": "movie",
+        "Poster": "http://example.com/poster2.jpg"
+      }
+    ]
+    ```
+  - **Error**: `500 Internal Server Error`
+    ```json
+    {
+      "error": "Failed to fetch data from OMDB API"
+    }
+    ```
+---
+
+### Watchlist Management
+
+#### Add Movie to WatchList by Movie ID
+- **Route**: `/add-to-watchlist`
+- **Request Type**: `POST`
+- **Request Body**:
+  - `username` (string, required): The username of the user.
+  - `imdb_id` (string, required): The imdb_id of the movie you are trying to insert.
+- **Request Format**: JSON
+    - **Success Response Example:**
+        - code: 201
+        - content: {"message": "Movie added to {username}'s watchlist"}
+- **Example Request**:
+  ```json
+  {
+    "username": "name",
+    "imdb_id": "tt0319343",
+  }
+  ```
+
+- **Example Response**:
+    ```json
+    {
+        "message": "Movie added to name's watchlist"
+    }
+    ```
+
+#### Delete Movie from WatchList by Movie ID
+- **Route**: `/delete-from-watchlist`
+- **Request Type**: `DELETE`
+- **Request Body**:
+  - `username` (string, required): The username of the user.
+  - `imdb_id` (string, required): The imdb_id of the movie you are trying to delete.
+- **Request Format**: JSON
+    - **Success Response Example:**
+        - code: 200
+        - content: {"message": "Movie deleted from {username}'s watchlist"}
+- **Example Request**:
+  ```json
+  {
+    "username": "name",
+    "imdb_id": "tt0319343",
+  }
+  ```
+
+- **Example Response**:
+    ```json
+    {
+        "message": "Movie deleted from name's watchlist"
+    }
+    ```
+
+#### Update Movie and Watching State from WatchList by Movie ID
+- **Route**: `/update-watchlist`
+- **Request Type**: `PUT`
+- **Request Body**:
+  - `username` (string, required): The username of the user.
+  - `imdb_id` (string, required): The imdb_id of the movie you are trying to delete.
+  - `watching_state` (string, required): The watching state is either 'To Watch' or 'Watched' or 'Watch Next'
+- **Request Format**: JSON
+    - **Success Response Example:**
+        - code: 200
+        - content: {"message": "Movie updated from {username}'s watchlist"}
+- **Example Request**:
+  ```json
+  {
+    "username": "name",
+    "imdb_id": "tt0319343",
+    "watching_state": "Watching Next"
+  }
+  ```
+
+- **Example Response**:
+    ```json
+    {
+        "message": "Movie updated from name's watchlist"
+    }
+    ```
+
+#### Get WatchList by Username
+- **Route**: `get-watchlist`
+- **Request Type**: `GET`
+- **Request Body**:
+  - `username` (string, required): The username of the user.
+- **Request Format**: JSON
+    - **Success Response Example:**
+        - code: 200
+        - content: {"message": f"{username}'s watchlist", "watchlist": user_watchlist}
+- **Example Request**:
+  ```json
+  {
+    "username": "name",
+  }
+  ```
+
+- **Example Response**:
+    ```json
+    {
+        "message": "name's watchlist, watchlist: [{'imdb_id': 'tt0319343', 'title': 'Elf', 'year': '2021', 'rated': 'PG', 'runtime': '97 min', 'plot': 'Raised as an oversized elf, Buddy travels from the North Pole to New York City to meet his biological father, Walter Hobbs, who doesn't know he exists and is in desperate need of some Christmas spirit.', 'genre': 'Adventure, Comedy, Family', 'imdb_rating': '7.1', 'type': 'movie', 'watching_state': 'To Watch'}]"
+    }
+    ```
 ---
 
 ## Common Commands

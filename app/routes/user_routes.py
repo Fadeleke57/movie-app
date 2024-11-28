@@ -1,15 +1,12 @@
 # Description: Routes for user account creation.
 from flask import Blueprint, request, jsonify
-import logging
+from app.utils.logger import logger
 from app.models.user import User
 from app.utils.db import db
 from app.utils.hashing import hash_password
 from app.utils.hashing import verify_password
 user_bp = Blueprint('user', __name__)
-
 # Configure logger
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
 
 user_bp = Blueprint('user', __name__)
 
