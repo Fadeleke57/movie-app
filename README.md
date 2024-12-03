@@ -14,8 +14,17 @@ A simple Flask-based movie application that integrates with the OMDB API for fet
   - Create an account
   - Log in
   - Update password
-- **Movie API Integration**: Work in progress.
-
+- **Movie API Integration**: 
+  - Search by title
+  - Search by id
+  - Search by keyword
+  - Search random movie
+  - Search top movies
+- **Movie Watchlist Management**: 
+  - Add to user watchlist
+  - Delete from user watchlist
+  - Update user watchlist
+  - Get user watchlist
 ---
 
 ## Requirements
